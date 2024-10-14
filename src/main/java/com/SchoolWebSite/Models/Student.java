@@ -106,9 +106,8 @@ public class Student implements UserDetails{
 
 		public Student(String email, String fullName, String address, String tel, String password, Date birthDate,
 				String school, String academy, String dP, String fatherName, String motherName, String guardianTel,
-				Genre genre, String profil, List<Soumission> soumissions, List<SessionAbsence> absences,
-				Bus schoolBus, List<Certification> certifications, List<Bill> bills, List<Comment> comments) {
-			super();
+				Genre genre, String profil) {
+			
 			this.email = email;
 			this.fullName = fullName;
 			this.address = address;
@@ -116,19 +115,12 @@ public class Student implements UserDetails{
 			this.password = password;
 			this.birthDate = birthDate;
 			this.academy = academy;
-			DP = dP;
+			this.DP = dP;
 			this.fatherName = fatherName;
 			this.motherName = motherName;
 			this.guardianTel = guardianTel;
 			this.genre = genre;
 			this.profil = profil;
-			
-			this.soumissions = soumissions;
-			this.absences = absences;
-			this.schoolBus = schoolBus;
-			this.certifications = certifications;
-			this.bills = bills;
-			this.comments = comments;
 		}
 
 		public String getEmail() {
