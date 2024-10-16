@@ -44,6 +44,13 @@ public class StudentController {
 		return service.findStudent(email);
 	}
 	
+	@GetMapping("/hello")
+	@ResponseBody
+	public String hello() {
+		System.out.println("hello from console");
+		return "hello from controller";
+	}
+	
 	@PostMapping("/add")
 	@ResponseBody
 	public Optional<Student> addStudent(@RequestBody Student std) {

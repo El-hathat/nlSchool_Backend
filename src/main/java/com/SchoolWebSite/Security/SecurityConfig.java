@@ -23,7 +23,7 @@ public class SecurityConfig {
     private final String[] PUBLIC_ENDPOINTS = {
             "/student/add",
             "/api/v1/auth",
-            "/signin",
+            "/student/hello",
             
     };
 
