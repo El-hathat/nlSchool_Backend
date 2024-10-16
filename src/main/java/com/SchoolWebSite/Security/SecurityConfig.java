@@ -14,6 +14,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.SchoolWebSite.Services.StudentService;
+
 
 @EnableWebSecurity
 @Configuration
@@ -28,9 +30,9 @@ public class SecurityConfig {
     };
 
     private final AuthFilter authFilter;
-    private final CustomUserDetailsService customUserDetailsService; // Add this line
+    private final StudentService customUserDetailsService; // Add this line
 
-    public SecurityConfig(AuthFilter authFilter, CustomUserDetailsService customUserDetailsService) {
+    public SecurityConfig(AuthFilter authFilter, StudentService customUserDetailsService) {
         this.authFilter = authFilter;
         this.customUserDetailsService = customUserDetailsService; // Inject the UserDetailsService
     }
@@ -42,7 +44,7 @@ public class SecurityConfig {
         
         .csrf(csrf->csrf.disable())
         .authorizeHttpRequests()
-        .requestMatchers("/api/v1/auth").permitAll()  // Permettre plusieurs chemins
+        .requestMatchers(PUBLIC_ENDPOINTS).permitAll()  // Permettre plusieurs chemins
         .anyRequest().authenticated();
                 
             http.addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class);
