@@ -20,7 +20,7 @@ public class Cours {
 	    private Long coursID;
 
 	    private String matName;
-	    private List<String> files;
+	    private String file;
 	    private String description;
 	    private Date pubDate;
 	    
@@ -33,12 +33,12 @@ public class Cours {
 
 		
 
-		public Cours(Long coursID, String matName, List<String> files, String description, Date pubDate,
+		public Cours(Long coursID, String matName, String files, String description, Date pubDate,
 				Matiere matiere, List<Comment> comments) {
 			super();
 			this.coursID = coursID;
 			this.matName = matName;
-			this.files = files;
+			this.file = files;
 			this.description = description;
 			this.pubDate = pubDate;
 			this.matiere = matiere;
@@ -69,12 +69,16 @@ public class Cours {
 			this.matName = matName;
 		}
 
-		public List<String> getFiles() {
-			return files;
+		
+
+		
+
+		public String getFile() {
+			return file;
 		}
 
-		public void setFiles(List<String> files) {
-			this.files = files;
+		public void setFile(String file) {
+			this.file = file;
 		}
 
 		public String getDescription() {

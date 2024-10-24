@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.SchoolWebSite.Models.Cours;
 import com.SchoolWebSite.Models.Devoir;
 import com.SchoolWebSite.Repository.DevoirRepo;
 
@@ -17,6 +18,14 @@ public class DevoirService {
 	
 	public List<Devoir> getDevoirs(Long matiere) {
 		return rep.getDevoirsByMatiere(matiere);
+	}
+	
+	public Devoir saveCours(Devoir dv) {
+		return rep.save(dv);
+	}
+	
+	public Devoir getDv(Long dv) {
+		return rep.getDevoirByDevoirID(dv);
 	}
 	
 	public Optional<Devoir> getDevoirById(Long id) {

@@ -24,15 +24,18 @@ public class SecurityConfig {
 
     private final String[] PUBLIC_ENDPOINTS = {
             "/student/add",
+            "/student/registrer",
+            "/student/forgotpwd/{cne}/{tel}/{gmail}",
             "/api/v1/auth",
             "/student/hello",
+            "/classes/*"
             
     };
 
     private final AuthFilter authFilter;
-    private final StudentService customUserDetailsService; // Add this line
+    private final CustomUserDetailsService customUserDetailsService; // Add this line
 
-    public SecurityConfig(AuthFilter authFilter, StudentService customUserDetailsService) {
+    public SecurityConfig(AuthFilter authFilter, CustomUserDetailsService customUserDetailsService) {
         this.authFilter = authFilter;
         this.customUserDetailsService = customUserDetailsService; // Inject the UserDetailsService
     }

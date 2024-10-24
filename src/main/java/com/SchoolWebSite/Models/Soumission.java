@@ -1,4 +1,5 @@
 package com.SchoolWebSite.Models;
+import java.time.LocalDate;
 import java.util.Date;
 
 import jakarta.persistence.Entity;
@@ -16,15 +17,19 @@ public class Soumission {
 	    @GeneratedValue(strategy = GenerationType.IDENTITY)
 	    private Long id;
 
-	    private Date dateSoumission;
+	    private LocalDate dateSoumission;
+	    private String file;
 	    private Double note;
 	    private String remarque;
 
 	    
-	    public Soumission(Long id, Date dateSoumission, Double note, String remarque, Devoir devoir, Student student) {
-			super();
+	   
+public Soumission(Long id, LocalDate dateSoumission, String file, Double note, String remarque, Devoir devoir,
+				Student student) {
+			
 			this.id = id;
 			this.dateSoumission = dateSoumission;
+			this.file = file;
 			this.note = note;
 			this.remarque = remarque;
 			this.devoir = devoir;
@@ -39,12 +44,12 @@ public Soumission() {}
 			this.id = id;
 		}
 
-		public Date getDateSoumission() {
+		public LocalDate getDateSoumission() {
 			return dateSoumission;
 		}
 
-		public void setDateSoumission(Date dateSoumission) {
-			this.dateSoumission = dateSoumission;
+		public void setDateSoumission(LocalDate localDate) {
+			this.dateSoumission = localDate;
 		}
 
 		public Double getNote() {
@@ -75,6 +80,13 @@ public Soumission() {}
 
 		public void setStudent(Student student) {
 			this.student = student;
+		}
+
+		public String getFile() {
+			return file;
+		}
+		public void setFile(String file) {
+			this.file = file;
 		}
 
 		@ManyToOne

@@ -1,8 +1,10 @@
 package com.SchoolWebSite.Models;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -23,13 +25,14 @@ public class Comment {
     private Long commentID;
 	
 	private String message;
-	private Date creationDate;
+	private LocalDate creationDate;
 	private int likeCount;
 	private boolean sousComment;
+	private String replayto;
 	
 	
 
-	public Date getCreationDate() {
+	public LocalDate getCreationDate() {
 		return creationDate;
 	}
 
@@ -41,8 +44,8 @@ public class Comment {
 	
 	
 
-	public void setCreationDate(Date creationDate) {
-		this.creationDate = creationDate;
+	public void setCreationDate(LocalDate localDate) {
+		this.creationDate = localDate;
 	}
 
 	public void setSousComment(boolean sousComment) {
@@ -52,6 +55,16 @@ public class Comment {
 	public void setParentComment(Comment parentComment) {
 		this.parentComment = parentComment;
 	}
+	
+	
+
+	
+
+	public void setDevoir(Devoir optional) {
+		this.devoir = optional;
+	}
+
+	
 
 	public List<Comment> getReplies() {
 		return replies;
@@ -103,15 +116,27 @@ public class Comment {
 	    @OneToMany(mappedBy = "parentComment", cascade = CascadeType.ALL, orphanRemoval = true)
 	    private List<Comment> replies;
 
-	public Comment(Long commentID, String message, int likeCount, Cours cours) {
-		
-		this.commentID = commentID;
-		this.message = message;
-		this.likeCount = likeCount;
-		this.cours = cours;
-	}
+	
 	 
-	 public Comment() {}
+	 public Comment(Long commentID, String message, LocalDate creationDate, int likeCount, boolean sousComment,
+				String replayto, Cours cours, Devoir devoir, Student student, Teacher teacher, Comment parentComment,
+				List<Comment> replies) {
+			super();
+			this.commentID = commentID;
+			this.message = message;
+			this.creationDate = creationDate;
+			this.likeCount = likeCount;
+			this.sousComment = sousComment;
+			this.replayto = replayto;
+			this.cours = cours;
+			this.devoir = devoir;
+			this.student = student;
+			this.teacher = teacher;
+			this.parentComment = parentComment;
+			this.replies = replies;
+		}
+
+	public Comment() {}
 
 	public Long getCommentID() {
 		return commentID;
@@ -140,6 +165,22 @@ public class Comment {
 
 	public void setCours(Cours cours) {
 		this.cours = cours;
+	}
+
+	public String getReplayto() {
+		return replayto;
+	}
+
+	public void setReplayto(String replayto) {
+		this.replayto = replayto;
+	}
+
+	@Override
+	public String toString() {
+		return "Comment [commentID=" + commentID + ", message=" + message + ", creationDate=" + creationDate
+				+ ", likeCount=" + likeCount + ", sousComment=" + sousComment + ", replayto=" + replayto + ", cours="
+				+ cours + ", devoir=" + devoir + ", student=" + student + ", teacher=" + teacher + ", parentComment="
+				+ parentComment + ", replies=" + replies + "]";
 	}
 	 
 	 

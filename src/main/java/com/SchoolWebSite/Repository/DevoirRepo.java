@@ -21,6 +21,6 @@ public interface DevoirRepo extends JpaRepository<Devoir, Long> {
 	    
 	);
 
-
+Devoir getDevoirByDevoirID(Long dv);
 
 }

@@ -1,11 +1,14 @@
 package com.SchoolWebSite.Services;
 
+import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -17,18 +20,24 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.SchoolWebSite.Models.Actualites;
 import com.SchoolWebSite.Models.Bill;
 import com.SchoolWebSite.Models.Certification;
 import com.SchoolWebSite.Models.Classe;
 import com.SchoolWebSite.Models.Etat;
+import com.SchoolWebSite.Models.Genre;
 import com.SchoolWebSite.Models.MatResponse;
 import com.SchoolWebSite.Models.Matiere;
 import com.SchoolWebSite.Models.NoteFinale;
+import com.SchoolWebSite.Models.ResetPassword;
 import com.SchoolWebSite.Models.Semestre;
 import com.SchoolWebSite.Models.Student;
 import com.SchoolWebSite.Repository.StudentRepo;
+import com.SchoolWebSite.Security.SignInRequest;
+
+import jakarta.mail.MessagingException;
 
 @Service
 public class StudentService implements UserDetailsService{
@@ -39,16 +48,83 @@ public class StudentService implements UserDetailsService{
 	@Autowired 
     private ClasseService classeService;
 
+	@Autowired 
+    private EmailService emServ;
 	
+	@Autowired
+	CloudinaryService cloudinaryService;
+	
+	private String generatePassword() {
+        String upperCase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        String lowerCase = "abcdefghijklmnopqrstuvwxyz";
+        String digits = "0123456789";
+        String specialChars = "!@#$%^&*()-_+=<>?";
+
+        String allChars = upperCase + lowerCase + digits + specialChars;
+
+        Random random = new Random();
+        StringBuilder password = new StringBuilder();
+
     
+        for (int i = 0; i < 8; i++) {
+            int index = random.nextInt(allChars.length());
+            password.append(allChars.charAt(index));
+        }
+
+        return password.toString();
+    }
+    
+	
 	
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+    
+    public void saveStudent(String fullName, String fatherName, String motherName, LocalDate birthDate, String tel, String guardianTel, String address, Genre genre, String email, MultipartFile profilFile) throws IOException, MessagingException {
+
+        Student student = new Student();
+        student.setFullName(fullName);
+        student.setFatherName(fatherName);
+        student.setMotherName(motherName);
+        //Date d=new Date(birthDate);		
+        student.setBirthDate(birthDate);
+        student.setTel(tel);
+        student.setGuardianTel(guardianTel);
+        student.setAddress(address);
+        student.setGenre(genre);
+        student.setGmail(email);
+        student.setEmail(generatePassword());
+
+        // Enregistrer la photo de profil si elle existe
+        if (profilFile != null && !profilFile.isEmpty()) {
+            // Utiliser un service comme Cloudinary pour sauvegarder l'image et obtenir l'URL
+            String profilUrl = cloudinaryService.uploadImage(profilFile);
+            student.setProfil(profilUrl);
+        }
+System.out.println(student.toString());
+        repo.save(student);
+        emServ.sendInscriptionEmail(email, fullName);
+    }
 	
 	public Student saveStudent(Student std) {
+		//System.out.println("password dayz :"+std.getPassword());
 		std.setPassword(passwordEncoder().encode(std.getPassword()));
 		return repo.save(std);
+	}
+	
+	public boolean forgotPwd(String std,String gmail,String tel) throws MessagingException {
+		Student st=repo.findByEmail(std);
+		if(st!=null) {
+			if((st.getTel().equals(tel) || st.getGuardianTel().equals(tel)) && st.getGmail().equals(gmail)){
+				String gp=generatePassword();
+				st.setPassword(passwordEncoder().encode(gp));
+				 repo.save(st);
+				 emServ.sendNewPasswordEmail(st.getGmail(), gp);
+				 return true;
+			}
+		}
+		
+		return false;
 	}
 	
 	public Object[] findStudent(String email) {
@@ -66,8 +142,8 @@ public class StudentService implements UserDetailsService{
 		int month=new Date().getMonth();
 		String yearSchool=repo.findClasseByStudent(email).getSchoolYear();
 		Semestre semestre=month>=9 && month<=12 ?Semestre.S1:Semestre.S2;
-		System.out.println(yearSchool);
-		System.out.println(semestre);
+		//System.out.println(yearSchool);
+		//System.out.println(semestre);
 		
 		int i=0;
 		int range=0;
@@ -97,7 +173,21 @@ public class StudentService implements UserDetailsService{
 		return lst;
 	}
 	
-	
+	public boolean StudentUpdate(ResetPassword sn) {
+		// System.out.println("email "+sn.getEmail());
+		// System.out.println("old "+sn.getOldPassword());
+		// System.out.println("new "+sn.getNewPassword());
+		Student std=repo.findByEmail(sn.getEmail());
+		if(passwordEncoder().matches(sn.getOldPassword(), std.getPassword())) {
+			std.setPassword(passwordEncoder().encode(sn.getNewPassword()));
+			 repo.save(std);
+			
+			 return true;
+			
+		}
+		return false;
+		
+	}
 	
 	public List<MatResponse> statistique(String email) {
 		MatResponse lst ;
@@ -113,8 +203,8 @@ public class StudentService implements UserDetailsService{
 				for (Object[] item : (repo.findExamNotes(year,Semestre.S1,mat.getMatName(),email))) {
 					note=note+Double.parseDouble(item[0]+"");
 					i++;
-					System.out.println(mat.getMatName());
-					System.out.println(note);
+					//System.out.println(mat.getMatName());
+					//System.out.println(note);
 				}
 				
 				lst=new MatResponse(mat.getMatName(),note/i);
@@ -173,6 +263,11 @@ public class StudentService implements UserDetailsService{
 	
 	public List<Actualites> getAllActualitesByClasse(Long classid){
 		return repo.findActualitesByClassId(classid);
+		
+	}
+	
+	public List<Certification> getAllcertification(String email){
+		return repo.findCertificationByStudent(email);
 		
 	}
 

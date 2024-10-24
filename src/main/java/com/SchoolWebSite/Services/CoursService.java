@@ -18,5 +18,9 @@ public class CoursService {
 		return repo.findById(id);
 	}
 	
+	public Cours saveCours(Cours cours) {
+		return repo.save(cours);
+	}
+	
 	
 }

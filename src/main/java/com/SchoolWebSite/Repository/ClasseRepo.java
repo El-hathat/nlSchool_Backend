@@ -14,5 +14,10 @@ public interface ClasseRepo extends JpaRepository<Classe, Long> {
     @Query("SELECT c.matieres FROM Classe c WHERE c.classID = :classID")
     List<Matiere> findMatieresByClasseId(@Param("classID") Long classID);
     
+    @Query("SELECT c.classID FROM Student s JOIN s.classes c WHERE s.id = :studentId AND c.schoolYear = :currentYear")
+    Long findClassesForCurrentYear(@Param("studentId") String studentId, @Param("currentYear") String currentYear);
+    
+    @Query("SELECT c.timeTable FROM Student s JOIN s.classes c WHERE s.id = :studentId AND c.schoolYear = :currentYear")
+    String findTimeTable(@Param("studentId") String studentId, @Param("currentYear") String currentYear);
    
 }

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.SchoolWebSite.Models.Classe;
 import com.SchoolWebSite.Models.Cours;
 import com.SchoolWebSite.Models.Matiere;
 import com.SchoolWebSite.Services.ClasseService;
@@ -22,6 +23,16 @@ public class ClasseController {
     @GetMapping("/{classeID}/matieres")
     public List<Matiere> getMatieres(@PathVariable Long classeID) {
         return classeService.getMatieresForClasse(classeID);
+    }
+    
+    @GetMapping("/{student}")
+    public Long getClasse(@PathVariable String student) {
+        return classeService.getClassesForCurrentYear(student);
+    }
+    
+    @GetMapping("/timetable/{student}")
+    public String getTimeTable(@PathVariable String student) {
+        return classeService.gettimeTablee(student);
     }
     
    

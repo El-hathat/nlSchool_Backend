@@ -8,8 +8,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import com.SchoolWebSite.Models.Devoir;
 import com.SchoolWebSite.Models.Matiere;
 import com.SchoolWebSite.Models.Soumission;
+import com.SchoolWebSite.Models.Student;
 @Repository
 public interface SoumissionRepo extends JpaRepository<Soumission, Long> {
 	  @Query("SELECT s FROM Soumission s WHERE s.student.email = :student AND s.devoir.matiere.matID = :matiere")
@@ -17,4 +19,6 @@ public interface SoumissionRepo extends JpaRepository<Soumission, Long> {
 	        @Param("student") String student,
 	        @Param("matiere") Long matiere
 	    );
+	  
+	  Soumission findSoumissionByStudentAndDevoir(Student st,Devoir dv);
 }

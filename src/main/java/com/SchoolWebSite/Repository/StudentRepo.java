@@ -27,6 +27,10 @@ public interface StudentRepo extends JpaRepository<Student, String> {
 	           "JOIN s.classes cls " +
 	           "WHERE s.email = :email")
 	    Object[] findStudentDetailsByEmail(@Param("email") String email);
+	
+	
+	@Query("SELECT c from Certification c,Student s where s.email=c.student.email  and s.email= :email")
+	    List<Certification> findCertificationByStudent(@Param("email") String email);
 	    
 	    
 	

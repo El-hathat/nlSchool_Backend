@@ -1,6 +1,9 @@
 package com.SchoolWebSite.Models;
 
 
+import java.io.Serializable;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -8,6 +11,8 @@ import java.util.List;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -35,7 +40,7 @@ public class Student implements UserDetails{
 	@Column
 	private String password;
 	@Column
-	private Date birthDate;
+	private LocalDate birthDate;
 	@Column
 	private String academy;
 	@Column
@@ -47,6 +52,11 @@ public class Student implements UserDetails{
 	@Column
 	private String guardianTel;
 	
+	@Column
+	private String gmail;
+	
+	
+	
 	@Enumerated(EnumType.STRING)
     @Column(name="Genre")
     private Genre genre;
@@ -55,7 +65,15 @@ public class Student implements UserDetails{
 	
 	
 	
-	  public String getProfil() {
+	  public String getGmail() {
+		return gmail;
+	}
+
+	public void setGmail(String gmail) {
+		this.gmail = gmail;
+	}
+
+	public String getProfil() {
 		return profil;
 	}
 
@@ -104,9 +122,9 @@ public class Student implements UserDetails{
 
 		
 
-		public Student(String email, String fullName, String address, String tel, String password, Date birthDate,
-				String school, String academy, String dP, String fatherName, String motherName, String guardianTel,
-				Genre genre, String profil) {
+		public Student(String email, String fullName, String address, String tel, String password, LocalDate birthDate,
+				 String academy, String dP, String fatherName, String motherName, String guardianTel,
+				Genre genre, String profil,String gmail) {
 			
 			this.email = email;
 			this.fullName = fullName;
@@ -121,6 +139,7 @@ public class Student implements UserDetails{
 			this.guardianTel = guardianTel;
 			this.genre = genre;
 			this.profil = profil;
+			this.gmail = gmail;
 		}
 
 		public String getEmail() {
@@ -161,12 +180,12 @@ public class Student implements UserDetails{
 			this.password = password;
 		}
 
-		public Date getBirthDate() {
+		public LocalDate getBirthDate() {
 			return birthDate;
 		}
 
-		public void setBirthDate(Date birthDate) {
-			this.birthDate = birthDate;
+		public void setBirthDate(LocalDate birthDate2) {
+			this.birthDate = birthDate2;
 		}
 
 	
@@ -254,14 +273,12 @@ public class Student implements UserDetails{
 		}
 	    
 	    public Student() {}
-
+	    
+	    @JsonDeserialize(contentUsing = SimpleGrantedAuthorityDeserializer.class)
 	    @Override
 	    public Collection<? extends GrantedAuthority> getAuthorities() {
-	        // Return the user's roles or authorities
-	        return List.of(new SimpleGrantedAuthority("ROLE_USER")); // or whatever roles you want to assign
+	        return new ArrayList<>(List.of(new SimpleGrantedAuthority("ROLE_USER")));
 	    }
-
-	    @Override
 	    public String getPassword() {
 	        return this.password;
 	    }
@@ -289,5 +306,18 @@ public class Student implements UserDetails{
 	    @Override
 	    public boolean isEnabled() {
 	        return true; // Or implement your logic
-	    }    
+	    }
+
+		@Override
+		public String toString() {
+			return "Student [email=" + email + ", fullName=" + fullName + ", address=" + address + ", tel=" + tel
+					+ ", password=" + password + ", birthDate=" + birthDate + ", academy=" + academy + ", DP=" + DP
+					+ ", fatherName=" + fatherName + ", motherName=" + motherName + ", guardianTel=" + guardianTel
+					+ ", gmail=" + gmail + ", genre=" + genre + ", profil=" + profil + ", classes=" + classes
+					+ ", soumissions=" + soumissions + ", absences=" + absences + ", noteFinale=" + noteFinale
+					+ ", schoolBus=" + schoolBus + ", school=" + school + ", certifications=" + certifications
+					+ ", bills=" + bills + ", comments=" + comments + "]";
+		}    
+	    
+	    
 }

@@ -38,7 +38,7 @@ public class AuthController {
 
     @PostMapping("/auth")
     public JwtResponse signIn(@RequestBody SignInRequest signInRequest) {
-        System.out.println("Email: " + signInRequest.getEmail());
+       // System.out.println("pwd from signin: " + signInRequest.getPassword());
         
         Student userDetails = studentService.getByEmail(signInRequest.getEmail());
         if (userDetails == null) {
@@ -48,11 +48,11 @@ public class AuthController {
         
         // Utilisez le bon champ pour le mot de passe
         String storedPassword = userDetails.getPassword(); // Assurez-vous que c'est le bon champ
-        System.out.println("PWD: " + storedPassword); // Juste pour vérifier le mot de passe
+      //  System.out.println("PWD: " + storedPassword); // Juste pour vérifier le mot de passe
 
         // Vérifiez si le mot de passe correspond
         if (!studentService.passwordEncoder().matches(signInRequest.getPassword(), storedPassword)) {
-            System.out.println("Invalid password!");
+           // System.out.println("Invalid password!");
             throw new BadCredentialsException("Identifiants erronés"); // Lancez une exception appropriée
         }
 
@@ -65,7 +65,7 @@ public class AuthController {
             String token = tokenUtil.generateToken(userDetails);
             JwtResponse response = new JwtResponse(userDetails, token);
             
-            System.out.println("Generated Token: " + token);
+           // System.out.println("Generated Token: " + token);
             
             return response;
         } catch (Exception e) {
