@@ -33,4 +33,9 @@ public class CommentService {
 		return repo.save(cmt);
 	}
 
+	public void delComment(Long cmt) {
+		// TODO Auto-generated method stub
+		 repo.deleteById(cmt);;
+	}
+
 }

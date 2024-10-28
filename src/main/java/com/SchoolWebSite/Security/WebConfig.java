@@ -14,7 +14,7 @@ public class WebConfig {
 	            @Override
 	            public void addCorsMappings(CorsRegistry registry) {
 	                registry.addMapping("/**") // Autorise tous les chemins de votre API
-	                        .allowedOrigins("https://nlschool.vercel.app/") // Autorise les requêtes de cette origine
+	                        .allowedOrigins("http://localhost:3000") // Autorise les requêtes de cette origine
 	                        .allowedMethods("GET", "POST", "PUT", "DELETE") // Méthodes HTTP autorisées
 	                        .allowedHeaders("*") // Autorise tous les en-têtes
 	                        .allowCredentials(true); // Autorise les cookies/credentials
