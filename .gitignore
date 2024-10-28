@@ -1,6 +1,3 @@
-HELP.md
-
-
 ### STS ###
 .apt_generated
 .classpath
@@ -28,3 +25,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Ignorer le fichier application.properties ###
+application.properties
